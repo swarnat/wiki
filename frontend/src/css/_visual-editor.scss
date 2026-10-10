@@ -381,6 +381,53 @@
   color: $negative;
 }
 
+/*
+  The command palette opened by typing `/` in an otherwise ordinary text block. It belongs to the
+  ProseMirror plugin rather than Vue, like the link bar, and is positioned inside the editing surface
+  so it follows the line when the document scrolls.
+*/
+.visual-slash-menu {
+  position: absolute;
+  z-index: 10;
+  width: min(18rem, calc(100% - 2rem));
+  max-height: 18rem;
+  overflow-y: auto;
+  padding: 4px;
+  border: 1px solid $grey-4;
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 0 4px 16px rgb(0 0 0 / 0.16);
+
+  .body--dark & {
+    border-color: $grey-8;
+    background: $grey-10;
+    box-shadow: 0 4px 16px rgb(0 0 0 / 0.45);
+  }
+}
+
+.visual-slash-menu-item {
+  display: block;
+  width: 100%;
+  padding: 7px 10px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: $grey-9;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+
+  &:hover,
+  &.is-selected {
+    background: color.change($primary, $alpha: 0.12);
+    color: $primary;
+  }
+
+  .body--dark & {
+    color: $grey-3;
+  }
+}
+
 .visual-link-bar button,
 .visual-link-bar-href,
 .visual-image-bar button {

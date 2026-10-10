@@ -15,6 +15,7 @@ import { createNodeViews } from './nodeviews'
 import { createParser } from './parse'
 import { schema } from './schema'
 import { serialize } from './serialize'
+import { slashMenu } from './slashMenu'
 
 /**
  * The Visual editor, assembled.
@@ -81,6 +82,9 @@ export function createVisualEditor({
 
   const buildPlugins = (isCollab) => [
     buildInputRules(),
+    // -> Before the general keymap so Enter and the arrow keys choose from an open menu rather than
+    //    splitting the paragraph or moving its selection
+    slashMenu({ items: context.slashMenuItems }),
     keymap(buildKeymap({ collab: isCollab })),
     gapCursor(),
     taskCheckboxes(),

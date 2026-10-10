@@ -603,6 +603,82 @@ const setHeading = (level) => run(toggleHeading(level))
 const setParagraph = () => run(setBlockType(schema.nodes.paragraph))
 const setAlert = (kind) => run(toggleAlert(kind))
 
+/**
+ * Slash-menu entries point at the same methods as the visible toolbars, keeping the menu an
+ * additional way to reach existing behaviour rather than a second command implementation.
+ * Constructed on demand so labels follow a locale loaded or changed after this component mounted.
+ */
+function slashMenuItems() {
+  return [
+    {
+      key: 'paragraph',
+      label: t('editor.markup.paragraph'),
+      keywords: ['text', 'normal'],
+      run: setParagraph
+    },
+    ...[1, 2, 3].map((level) => ({
+      key: `heading-${level}`,
+      label: t('editor.markup.headerLevel', { level }),
+      keywords: ['heading', 'title', `h${level}`],
+      run: () => setHeading(level)
+    })),
+    {
+      key: 'bullet-list',
+      label: t('editor.markup.unorderedList'),
+      keywords: ['bullet', 'list'],
+      run: () => runToggleList('bullet')
+    },
+    {
+      key: 'ordered-list',
+      label: t('editor.markup.orderedList'),
+      keywords: ['numbered', 'list'],
+      run: () => runToggleList('ordered')
+    },
+    {
+      key: 'task-list',
+      label: t('editor.markup.taskList'),
+      keywords: ['check', 'todo', 'list'],
+      run: () => runToggleList('task')
+    },
+    {
+      key: 'blockquote',
+      label: t('editor.markup.blockquote'),
+      keywords: ['quote'],
+      run: runWrapBlockquote
+    },
+    {
+      key: 'code-block',
+      label: t('editor.markup.insertCodeBlock'),
+      keywords: ['code', 'fence'],
+      run: () => insertCodeBlock('')
+    },
+    {
+      key: 'table',
+      label: t('editor.markup.insertTable'),
+      keywords: ['grid'],
+      run: insertTable
+    },
+    {
+      key: 'definition-list',
+      label: t('editor.markup.insertDefinitionList'),
+      keywords: ['definition', 'description'],
+      run: insertDefinitionList
+    },
+    {
+      key: 'horizontal-rule',
+      label: t('editor.markup.insertHorizontalBar'),
+      keywords: ['divider', 'separator', 'rule'],
+      run: insertHorizontalBar
+    },
+    {
+      key: 'block',
+      label: t('editor.markup.insertBlock'),
+      keywords: ['component', 'diagram'],
+      run: insertBlock
+    }
+  ]
+}
+
 function runWrapBlockquote() {
   run(active.blockquote ? lift : wrapIn(schema.nodes.blockquote))
 }
@@ -1396,6 +1472,7 @@ onMounted(async () => {
       removeLink: unlink,
       editImage,
       replaceImage,
+      slashMenuItems,
       alertClass: (kind) => ALERT_KINDS[kind] ?? '',
       alertLabel: (kind) => t(`editor.visual.alert.${kind}`),
       t
